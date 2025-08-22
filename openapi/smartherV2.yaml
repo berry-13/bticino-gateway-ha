@@ -1,0 +1,1329 @@
+openapi: 3.0.1
+info:
+  title: Smarther legacy
+  description: "An API to easily get informations and control your Smarther\n</br>\n<a href=\"https://developer.legrand.com/smarther-changelog\">Check API change log</a>"
+  version: v2.0
+servers:
+  - url: https://api.developer.legrand.com/smarther/v2.0
+paths:
+  /plants:
+    get:
+      summary: Plants
+      description: "Operation used to retrieve all the plants associated to a user.\n\n<b>Required scope: topology.read</b>"
+      operationId: Plants
+      responses:
+        '200':
+          description: 'OK: list of your plants is returned.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantsGet200ApplicationJsonResponse'
+              example:
+                plants:
+                  - id: string
+                    name: string
+                    type: string
+        '204':
+          description: No plant associated with this user
+          content:
+            application/json: { }
+        '400':
+          description: 'Bad request: something is probably wrong in your request body or headers.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: 'Unauthorized: user is not authorized to access the requested resource.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: 'Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporary disconnected from the network.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/408'
+              example:
+                statusCode: 408
+                message: Request timeout
+        '469':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/469'
+              example:
+                statusCode: 469
+                message: Password used in the Thermostat official app is expired. Please renew it through the official application.
+        '470':
+          description: 'Official application terms and conditions expired: terms and conditions for Thermostat official app are expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/470'
+              example:
+                statusCode: 470
+                message: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  '/plants/{plantId}/topology':
+    get:
+      summary: Topology
+      description: "Operation used to retrieve the complete topology of a plant.\n\n<b>Required scope: topology.read</b>"
+      operationId: Topology
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'OK: complete topology of your plant is returned.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantsPlantIdTopologyGet200ApplicationJsonResponse'
+              example:
+                plant:
+                  id: string
+                  name: string
+                  modules:
+                    - device: chronothermostat
+                      id: string
+                      name: string
+                      capabilities:
+                        - capability: string
+                          canDo:
+                            command:
+                              do: true
+                            request:
+                              do: true
+                            notification:
+                              do: true
+        '400':
+          description: 'Bad request: something is probably wrong in your request body or headers.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: 'Unauthorized: user is not authorized to access the requested resource.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: 'Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporary disconnected from the network.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/408'
+              example:
+                statusCode: 408
+                message: Request timeout
+        '469':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/469'
+              example:
+                statusCode: 469
+                message: Password used in the Thermostat official app is expired. Please renew it through the official application.
+        '470':
+          description: 'Official application terms and conditions expired: terms and conditions for Thermostat official app are expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/470'
+              example:
+                statusCode: 470
+                message: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  '/chronothermostat/thermoregulation/addressLocation/plants/{plantId}/modules/parameter/id/value/{moduleId}':
+    get:
+      summary: Get Chronothermostat Status
+      description: "Operation used to retrieve the complete status of a chronothermostat.\n\n<b>Required scope: comfort.read</b>"
+      operationId: Get-Chronothermostat-Status
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+        - name: moduleId
+          in: path
+          description: Format - uuid. The id of the device
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChronothermostatThermoregulationAddressLocationPlantsPlantIdModulesParameterIdValueModuleIdGet200ApplicationJsonResponse'
+              example:
+                chronothermostats:
+                  - function: heating
+                    mode: automatic
+                    setPoint:
+                      value: string
+                      unit: C
+                    programs:
+                      - number: 0
+                    activationTime: string
+                    temperatureFormat: C
+                    loadState: active
+                    time: string
+                    thermometer:
+                      measures:
+                        - timeStamp: string
+                          value: string
+                          unit: C
+                    hygrometer:
+                      measures:
+                        - timeStamp: string
+                          value: string
+                          unit: '%'
+                    sender:
+                      addressType: string
+                      system: string
+                      plant:
+                        id: string
+                        module:
+                          id: string
+        '400':
+          description: 'Bad request: something is probably wrong in your request body or headers.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: 'Unauthorized: user is not authorized to access the requested resource.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: 'Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporary disconnected from the network.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/408'
+              example:
+                statusCode: 408
+                message: Request timeout
+        '469':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/469'
+              example:
+                statusCode: 469
+                message: Password used in the Thermostat official app is expired. Please renew it through the official application.
+        '470':
+          description: 'Official application terms and conditions expired: terms and conditions for Thermostat official app are expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/470'
+              example:
+                statusCode: 470
+                message: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+    post:
+      summary: Set Chronothermostat Status
+      description: "Operation used to set the status of a chronothermostat.\n\n<b>Required scope: comfort.write</b>"
+      operationId: Set-Chronothermostat-Status
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+        - name: moduleId
+          in: path
+          description: Format - uuid. The id of the device
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Body of the Set Chronothermostat Status request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json: { }
+        '400':
+          description: 'Bad request: something is probably wrong in your request body or headers.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: 'Unauthorized: user is not authorized to access the requested resource.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: 'Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporary disconnected from the network.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/408'
+              example:
+                statusCode: 408
+                message: Request timeout
+        '430':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/430'
+              example:
+                statusCode: 430
+                message: Wrong input parameters
+        '469':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/469'
+              example:
+                statusCode: 469
+                message: Password used in the Thermostat official app is expired. Please renew it through the official application.
+        '470':
+          description: 'Official application terms and conditions expired: terms and conditions for Thermostat official app are expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/470'
+              example:
+                statusCode: 470
+                message: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+        '486':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/486'
+              example:
+                statusCode: 486
+                message: Busy visual user interface
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  '/chronothermostat/thermoregulation/addressLocation/plants/{plantId}/modules/parameter/id/value/{moduleId}/measures':
+    get:
+      summary: Chronothermostat Measures
+      description: "Operation used to retrieve the measured temperature and humidity detected by a chronothermostat.\n\n<b>Required scope: comfort.read</b>"
+      operationId: Chronothermostat-Measures
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+        - name: moduleId
+          in: path
+          description: Format - uuid. The id of the device
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChronothermostatThermoregulationAddressLocationPlantsPlantIdModulesParameterIdValueModuleIdMeasuresGet200ApplicationJsonResponse'
+              example:
+                thermometer:
+                  measures:
+                    - timeStamp: string
+                      value: string
+                      unit: string
+                hygrometer:
+                  measures:
+                    - timeStamp: string
+                      value: string
+                      unit: string
+                sender:
+                  addressType: string
+                  system: string
+                  plant:
+                    id: string
+                    module:
+                      id: string
+        '400':
+          description: 'Bad request: something is probably wrong in your request body or headers.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: 'Unauthorized: user is not authorized to access the requested resource.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: 'Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporary disconnected from the network.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/408'
+              example:
+                statusCode: 408
+                message: Request timeout
+        '469':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/469'
+              example:
+                statusCode: 469
+                message: Password used in the Thermostat official app is expired. Please renew it through the official application.
+        '470':
+          description: 'Official application terms and conditions expired: terms and conditions for Thermostat official app are expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/470'
+              example:
+                statusCode: 470
+                message: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  '/chronothermostat/thermoregulation/addressLocation/plants/{plantId}/modules/parameter/id/value/{moduleId}/programlist':
+    get:
+      summary: Chronothermostat ProgramList
+      description: "Operation used to retrieve the list of programs managed by a chronothermostat.\n\n<b>Required scope: comfort.read</b>"
+      operationId: Chronothermostat-ProgramList
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+        - name: moduleId
+          in: path
+          description: Format - uuid. The id of the device
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChronothermostatThermoregulationAddressLocationPlantsPlantIdModulesParameterIdValueModuleIdProgramlistGet200ApplicationJsonResponse'
+              example:
+                chronothermostats:
+                  - programs:
+                      - number: 0
+                        name: string
+                    sender:
+                      addressType: string
+                      system: string
+                      plant:
+                        id: string
+                        module:
+                          id: string
+        '400':
+          description: 'Bad request: something is probably wrong in your request body or headers.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: 'Unauthorized: user is not authorized to access the requested resource.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: 'Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporary disconnected from the network.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '408':
+          description: Request timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/408'
+              example:
+                statusCode: 408
+                message: Request timeout
+        '469':
+          description: 'Official application password expired: password used in the Thermostat official app is expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/469'
+              example:
+                statusCode: 469
+                message: Password used in the Thermostat official app is expired. Please renew it through the official application.
+        '470':
+          description: 'Official application terms and conditions expired: terms and conditions for Thermostat official app are expired.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/470'
+              example:
+                statusCode: 470
+                message: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  '/plants/{plantId}/subscription':
+    post:
+      summary: Subscribe to C2C notifications
+      description: "Operation used to subscribe a user to get Cloud2Cloud notifications of a plant.\n\n<b>Required scope: comfort.read</b>"
+      operationId: Subscribe-to-C2C-notifications
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Third party Cloud URL where notification must be sent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body2'
+      responses:
+        '201':
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlantsPlantIdSubscriptionPost201ApplicationJsonResponse'
+              example:
+                subscriptionId: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: Resource not found/Gateway offline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '409':
+          description: Subscription already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/409'
+              example:
+                statusCode: 409
+                message: Subscription already exists
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  '/plants/{plantId}/subscription/{subscriptionId}':
+    delete:
+      summary: Delete subscription to C2C notifications
+      description: "Operation used to delete the subscription of a user to get Cloud2Cloud notifications of a plant.\n\n<b>Required scope: comfort.read</b>"
+      operationId: Delete-subscription-to-C2C-notifications
+      parameters:
+        - name: plantId
+          in: path
+          description: Format - uuid. The id of the plant
+          required: true
+          schema:
+            type: string
+        - name: subscriptionId
+          in: path
+          description: Format - uuid. The id of the subscription
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json: { }
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: Resource not found/Gateway offline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+  /subscription:
+    get:
+      summary: Get subscriptions to C2C notifications
+      description: "Operation used to get subscriptions of a user to get Cloud2Cloud notifications of a plant.\n\n<b>Required scope: comfort.read</b>"
+      operationId: Get-subscriptions-to-C2C-notifications
+      responses:
+        '200':
+          description: 'OK: list of subscriptions is returned.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionGet200ApplicationJsonResponse'
+              example:
+                - plantId: string
+                  subscriptionId: string
+                  EndPointUrl: http://www.example.com
+        '204':
+          description: No subscription associated with this user
+          content:
+            application/json: { }
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+              example:
+                statusCode: 400
+                message: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+              example:
+                statusCode: 401
+                message: Unauthorized
+        '404':
+          description: Resource not found/Gateway offline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+              example:
+                statusCode: 404
+                message: Resource not found
+        '500':
+          description: Server internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
+              example:
+                statusCode: 500
+                message: Server internal error
+components:
+  schemas:
+    '400':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 400
+        message:
+          type: string
+          description: Error message
+          example: Bad request
+    '401':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 401
+        message:
+          type: string
+          description: Error message
+          example: Unauthorized
+    '404':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 404
+        message:
+          type: string
+          description: Error message
+          example: Resource not found
+    '408':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 408
+        message:
+          type: string
+          description: Error message
+          example: Request timeout
+    '409':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 409
+        message:
+          type: string
+          example: Subscription already exists
+    '430':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 430
+        message:
+          type: string
+          description: Error message
+          example: Wrong input parameters
+    '469':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 469
+        message:
+          type: string
+          description: Error message
+          example: Password used in the Thermostat official app is expired. Please renew it through the official application.
+    '470':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 470
+        message:
+          type: string
+          description: Error message
+          example: Terms and conditions for Thermostat official app are expired. Please accept them again through the official application.
+    '486':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 486
+        message:
+          type: string
+          description: Error message
+          example: Busy visual user interface
+    '500':
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: Error code
+          example: 500
+        message:
+          type: string
+          description: Error message
+          example: Server internal error
+    PlantsGet200ApplicationJsonResponse:
+      type: object
+      properties:
+        plants:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The id of the plant
+                format: uuid
+              name:
+                type: string
+                description: The name of your plant
+              type:
+                type: string
+                description: The type of your plant
+    PlantsPlantIdTopologyGet200ApplicationJsonResponse:
+      type: object
+      properties:
+        plant:
+          type: object
+          properties:
+            id:
+              type: string
+              description: The id of the plant
+              format: uuid
+            name:
+              type: string
+              description: The name of your plant
+            modules:
+              type: array
+              items:
+                type: object
+                properties:
+                  device:
+                    enum:
+                      - chronothermostat
+                    type: string
+                    description: The type of the device
+                  id:
+                    type: string
+                    description: The id of the device
+                    format: uuid
+                  name:
+                    type: string
+                    description: The name of the device
+                  capabilities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        capability:
+                          type: string
+                          description: The name of the capability
+                        canDo:
+                          type: object
+                          properties:
+                            command:
+                              type: object
+                              properties:
+                                do:
+                                  type: boolean
+                              description: 'If true, it is possible to set this capability'
+                            request:
+                              type: object
+                              properties:
+                                do:
+                                  type: boolean
+                              description: 'If true, it is possible to request this capability'
+                            notification:
+                              type: object
+                              properties:
+                                do:
+                                  type: boolean
+                              description: 'If true, it is possible to receive notification about this capability changes'
+                    description: List of capabilities of this device
+              description: List of devices composing the plant
+    ChronothermostatThermoregulationAddressLocationPlantsPlantIdModulesParameterIdValueModuleIdGet200ApplicationJsonResponse:
+      type: object
+      properties:
+        chronothermostats:
+          type: array
+          items:
+            type: object
+            properties:
+              function:
+                enum:
+                  - heating
+                  - cooling
+                type: string
+                description: Current thermostat function
+              mode:
+                enum:
+                  - automatic
+                  - manual
+                  - boost
+                  - off
+                  - protection
+                type: string
+                description: Current thermostat working mode
+              setPoint:
+                type: object
+                properties:
+                  value:
+                    maximum: 40
+                    minimum: 3
+                    type: string
+                  unit:
+                    enum:
+                      - C
+                      - F
+                    type: string
+                description: 'Current thermostat setpoint temperature, if working mode is not boost'
+              programs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    number:
+                      maximum: 11
+                      minimum: 0
+                      type: integer
+                description: 'Current thermostat active program number, if working mode is automatic'
+              activationTime:
+                type: string
+                description: Date and time to which current working mode will be maintained
+                format: YYYY-MM-DDThh:mm:ss
+              temperatureFormat:
+                enum:
+                  - C
+                  - F
+                type: string
+                description: Current thermostat temperature format
+              loadState:
+                enum:
+                  - active
+                  - inactive
+                type: string
+                description: Current thermostat load state
+              time:
+                type: string
+                description: Current thermostat date and time
+                format: YYYY-MM-DDThh:mm:ss±hh:mm
+              thermometer:
+                type: object
+                properties:
+                  measures:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        timeStamp:
+                          type: string
+                          description: Date and time of the measurement
+                          format: YYYY-MM-DDThh:mm:ss±hh:mm
+                        value:
+                          type: string
+                          description: Value of the measurement
+                        unit:
+                          enum:
+                            - C
+                            - F
+                          type: string
+                          description: Unit of the measurement
+                    description: List of temperature values measured by thermometer
+              hygrometer:
+                type: object
+                properties:
+                  measures:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        timeStamp:
+                          type: string
+                          description: Date and time of the measurement
+                          format: YYYY-MM-DDThh:mm:ss±hh:mm
+                        value:
+                          type: string
+                          description: Value of the measurement
+                        unit:
+                          enum:
+                            - '%'
+                          type: string
+                          description: Unit of the measurement
+                    description: List of humidity values measured by hygrometer
+              sender:
+                type: object
+                properties:
+                  addressType:
+                    type: string
+                  system:
+                    type: string
+                  plant:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The id of the plant
+                        format: uuid
+                      module:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            description: The id of the device
+                            format: uuid
+                description: Sender of the message
+    Body:
+      required:
+        - function
+        - mode
+      type: object
+      properties:
+        function:
+          enum:
+            - heating
+            - cooling
+          type: string
+          description: Desired thermostat function
+        mode:
+          enum:
+            - automatic
+            - manual
+            - boost
+            - off
+            - protection
+          type: string
+          description: Desired thermostat working mode
+        setPoint:
+          type: object
+          properties:
+            value:
+              maximum: 40
+              minimum: 3
+              type: string
+            unit:
+              enum:
+                - C
+              type: string
+          description: 'Desired setpoint temperature (Celsius scale): required parameter for manual mode'
+        programs:
+          maxItems: 1
+          type: array
+          items:
+            type: object
+            properties:
+              number:
+                maximum: 11
+                minimum: 0
+                type: integer
+          description: 'Number of program to be set: required parameter for automatic mode'
+        activationTime:
+          pattern: '[0-9]{4}(-[0-9]{1,2}){2}T[0-9]{2}(:[0-9]{2}){2}(/[0-9]{4}(-[0-9]{1,2}){2}T[0-9]{2}(:[0-9]{2}){2})?'
+          type: string
+          description: 'Date and time (format YYYY-MM-DDThh:mm:ss) to which new working mode will be maintained. For boost mode, duration is limited to 30, 60 or 90 minutes, indicating starting (current) and final date and time. Required parameter for boost mode, optional for manual, off and protection modes'
+    ChronothermostatThermoregulationAddressLocationPlantsPlantIdModulesParameterIdValueModuleIdMeasuresGet200ApplicationJsonResponse:
+      type: object
+      properties:
+        thermometer:
+          type: object
+          properties:
+            measures:
+              type: array
+              items:
+                type: object
+                properties:
+                  timeStamp:
+                    type: string
+                    description: Date and time of the measurement
+                    format: YYYY-MM-DDThh:mm:ss±hh:mm
+                  value:
+                    type: string
+                    description: Value of the measurement
+                  unit:
+                    type: string
+                    description: Unit of the measurement
+              description: List of temperature values measured by thermometer
+        hygrometer:
+          type: object
+          properties:
+            measures:
+              type: array
+              items:
+                type: object
+                properties:
+                  timeStamp:
+                    type: string
+                    description: Date and time of the measurement
+                    format: YYYY-MM-DDThh:mm:ss±hh:mm
+                  value:
+                    type: string
+                    description: Value of the measurement
+                  unit:
+                    type: string
+                    description: Unit of the measurement
+              description: List of humidity values measured by hygrometer
+        sender:
+          type: object
+          properties:
+            addressType:
+              type: string
+            system:
+              type: string
+            plant:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: The id of the plant
+                  format: uuid
+                module:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The id of the device
+                      format: uuid
+          description: Sender of the message
+    ChronothermostatThermoregulationAddressLocationPlantsPlantIdModulesParameterIdValueModuleIdProgramlistGet200ApplicationJsonResponse:
+      type: object
+      properties:
+        chronothermostats:
+          type: array
+          items:
+            type: object
+            properties:
+              programs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    number:
+                      type: integer
+                      description: Number of the program
+                    name:
+                      type: string
+                      description: Name of the program
+                description: List of programs managed/stored by your thermostat
+              sender:
+                type: object
+                properties:
+                  addressType:
+                    type: string
+                  system:
+                    type: string
+                  plant:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The id of the plant
+                        format: uuid
+                      module:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            description: The id of the device
+                            format: uuid
+                description: Sender of the message
+    Body2:
+      required:
+        - EndPointUrl
+      type: object
+      properties:
+        EndPointUrl:
+          type: string
+          description: Third party Cloud webhook URL
+          example: http://www.example.com
+    PlantsPlantIdSubscriptionPost201ApplicationJsonResponse:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+          description: The id of the subscription
+          format: uuid
+    SubscriptionGet200ApplicationJsonResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          plantId:
+            type: string
+            description: The id of the plant
+            format: uuid
+          subscriptionId:
+            type: string
+            description: The id of the subscription
+            format: uuid
+          EndPointUrl:
+            type: string
+            description: Third party Cloud webhook URL
+            example: http://www.example.com
+  securitySchemes:
+    apiKeyHeader:
+      type: apiKey
+      name: Ocp-Apim-Subscription-Key
+      in: header
+    apiKeyQuery:
+      type: apiKey
+      name: subscription-key
+      in: query
+security:
+  - apiKeyHeader: [ ]
+  - apiKeyQuery: [ ]
