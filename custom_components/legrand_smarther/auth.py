@@ -56,8 +56,5 @@ async def async_get_oauth_implementation(
 
 async def async_setup_oauth(hass: HomeAssistant) -> None:
     """Set up OAuth2 for Legrand Smarther."""
-    config_entry_oauth2_flow.async_register_implementation(
-        hass,
-        DOMAIN,
-        "legrand_smarther",
-    )
+    # OAuth2 implementations are now registered via application_credentials platform
+    pass
