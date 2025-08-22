@@ -28,7 +28,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class LegrandSmartherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+class LegrandSmartherFlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, domain=DOMAIN):
     """Handle a config flow for Legrand Smarther."""
 
     VERSION = 1
@@ -36,12 +36,15 @@ class LegrandSmartherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     def __init__(self):
         """Initialize the config flow."""
-        self.flow_impl: Optional[
-            config_entry_oauth2_flow.AbstractOAuth2Implementation
-        ] = None
+        super().__init__()
         self._oauth_data: Optional[Dict[str, Any]] = None
         self._plants: list = []
         self._modules: list = []
+
+    @property
+    def logger(self) -> logging.Logger:
+        """Return logger."""
+        return _LOGGER
 
     @staticmethod
     @callback
@@ -65,51 +68,8 @@ class LegrandSmartherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 },
             )
 
-        # Start OAuth2 flow
+        # Start OAuth2 flow - AbstractOAuth2FlowHandler will handle this
         return await self.async_step_pick_implementation()
-
-    async def async_step_pick_implementation(self, user_input=None):
-        """Pick OAuth2 implementation."""
-        implementations = await config_entry_oauth2_flow.async_get_implementations(
-            self.hass, DOMAIN
-        )
-
-        if len(implementations) == 1:
-            # If only one implementation, use it directly
-            implementation_domain = list(implementations.keys())[0]
-            self.flow_impl = implementations[implementation_domain]
-            return await self.async_step_auth()
-
-        if user_input is not None:
-            self.flow_impl = implementations[user_input["implementation"]]
-            return await self.async_step_auth()
-
-        schema = vol.Schema(
-            {
-                vol.Required("implementation"): vol.In(
-                    {key: impl.name for key, impl in implementations.items()}
-                )
-            }
-        )
-
-        return self.async_show_form(
-            step_id="pick_implementation",
-            data_schema=schema,
-        )
-
-    async def async_step_auth(self, user_input=None):
-        """Handle OAuth2 authorization."""
-        if self.flow_impl is None:
-            return self.async_abort(reason="no_implementation")
-
-        oauth_flow = config_entry_oauth2_flow.OAuth2FlowHandler(
-            self.hass,
-            self,
-            DOMAIN,
-            self.flow_impl,
-        )
-
-        return await oauth_flow.async_step_auth(user_input)
 
     async def async_oauth_create_entry(self, data: Dict[str, Any]) -> FlowResult:
         """Create an entry after OAuth2 authorization."""
@@ -118,7 +78,7 @@ class LegrandSmartherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             # Test the API connection and fetch plants
             oauth_session = config_entry_oauth2_flow.OAuth2Session(
-                self.hass, None, self.flow_impl, data["token"]
+                self.hass, None, self.flow_implementation, data["token"]
             )
             api = SmartherAPI(self.hass, oauth_session)
 
@@ -236,16 +196,8 @@ class LegrandSmartherFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is None:
             return self.async_show_form(step_id="reauth_confirm")
 
-        # Start OAuth2 flow for reauth
-        implementations = await config_entry_oauth2_flow.async_get_implementations(
-            self.hass, DOMAIN
-        )
-
-        if not implementations:
-            return self.async_abort(reason="no_application_credentials")
-
-        self.flow_impl = list(implementations.values())[0]
-        return await self.async_step_auth()
+        # Use the parent class implementation for reauth
+        return await self.async_step_pick_implementation()
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
