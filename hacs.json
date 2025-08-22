@@ -1,0 +1,7 @@
+{
+  "name": "Legrand Smarther",
+  "hacs": "1.6.0",
+  "domains": ["climate", "sensor", "binary_sensor"],
+  "iot_class": "Cloud Polling",
+  "homeassistant": "2023.11.0"
+}

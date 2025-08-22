@@ -1,0 +1,100 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Legrand Smarther",
+        "description": "Set up your Legrand Smarther thermostats using OAuth2 authentication.",
+        "data": {
+          "implementation": "Authentication provider"
+        }
+      },
+      "pick_implementation": {
+        "title": "Choose authentication method",
+        "description": "Select the authentication provider to use for Legrand Smarther.",
+        "data": {
+          "implementation": "Authentication provider"
+        }
+      },
+      "auth": {
+        "title": "Authenticate with Legrand",
+        "description": "Click the link below to authenticate with your Legrand developer account."
+      },
+      "select_modules": {
+        "title": "Select thermostats",
+        "description": "Choose which thermostats you want to add to Home Assistant.",
+        "data": {
+          "modules": "Thermostats to add"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate with Legrand",
+        "description": "Your authentication has expired. Please re-authenticate to continue using your Legrand Smarther devices."
+      }
+    },
+    "error": {
+      "no_application_credentials": "No application credentials configured. Please set up application credentials for Legrand Smarther first.",
+      "auth_error": "Authentication failed. Please check your credentials and try again.",
+      "no_plants": "No plants found in your Legrand account. Please check your account and ensure you have thermostats configured.",
+      "no_modules": "No compatible thermostats found. Please ensure you have Smarther v2 devices configured in your plants.",
+      "no_modules_selected": "Please select at least one thermostat to add.",
+      "already_configured": "All selected thermostats are already configured.",
+      "unknown": "An unexpected error occurred. Please try again."
+    },
+    "abort": {
+      "already_configured": "Device is already configured",
+      "no_implementation": "No authentication implementation available",
+      "auth_error": "Authentication failed",
+      "no_plants": "No plants found in your account",
+      "no_modules": "No compatible thermostats found",
+      "unknown": "Unknown error occurred"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Legrand Smarther options",
+        "description": "Configure polling interval and sensor options for your Legrand Smarther devices.",
+        "data": {
+          "scan_interval": "Polling interval (seconds)",
+          "temperature_step": "Temperature adjustment step",
+          "enable_extra_sensors": "Enable additional diagnostic sensors"
+        }
+      }
+    }
+  },
+  "entity": {
+    "climate": {
+      "state_attributes": {
+        "preset_mode": {
+          "state": {
+            "automatic": "Automatic",
+            "manual": "Manual", 
+            "boost": "Boost",
+            "off": "Off",
+            "protection": "Protection"
+          }
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "auth_error": {
+      "message": "Authentication failed. Please re-authenticate in the integration settings."
+    },
+    "api_error_469": {
+      "message": "Your Thermostat app password has expired. Please renew it in the official Legrand Thermostat app."
+    },
+    "api_error_470": {
+      "message": "Terms and conditions have expired. Please accept them again in the official Legrand Thermostat app."
+    },
+    "connection_error": {
+      "message": "Unable to connect to Legrand servers. Please check your internet connection and try again."
+    },
+    "timeout_error": {
+      "message": "Request timed out. Please try again."
+    },
+    "not_found_error": {
+      "message": "Thermostat is offline or not found. Check your device connection."
+    }
+  }
+}

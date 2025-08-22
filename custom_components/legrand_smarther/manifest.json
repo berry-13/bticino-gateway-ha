@@ -1,0 +1,13 @@
+{
+  "domain": "legrand_smarther",
+  "name": "Legrand Smarther",
+  "version": "0.1.0",
+  "documentation": "https://github.com/berry-13/bticino-gateway-ha",
+  "issue_tracker": "https://github.com/berry-13/bticino-gateway-ha/issues",
+  "dependencies": ["application_credentials"],
+  "requirements": [],
+  "codeowners": ["@berry-13"],
+  "iot_class": "cloud_polling",
+  "config_flow": true,
+  "integration_type": "hub"
+}
