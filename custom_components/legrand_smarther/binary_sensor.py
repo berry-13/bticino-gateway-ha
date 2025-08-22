@@ -1,4 +1,5 @@
 """Binary sensor platform for Legrand Smarther."""
+
 import logging
 from typing import Any, Dict, Optional
 
@@ -12,13 +13,13 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
-    DOMAIN,
-    ATTR_PLANT_ID,
     ATTR_MODULE_ID,
-    LOAD_STATE_ACTIVE,
-    THERMOSTAT_FUNCTION_HEATING,
-    THERMOSTAT_FUNCTION_COOLING,
+    ATTR_PLANT_ID,
     CONF_ENABLE_EXTRA_SENSORS,
+    DOMAIN,
+    LOAD_STATE_ACTIVE,
+    THERMOSTAT_FUNCTION_COOLING,
+    THERMOSTAT_FUNCTION_HEATING,
 )
 from .coordinator import SmartherDataUpdateCoordinator
 
@@ -32,17 +33,19 @@ async def async_setup_entry(
 ) -> None:
     """Set up Legrand Smarther binary sensor entities."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
-    
+
     entities = []
-    
+
     # Add extra sensors if enabled
     enable_extra_sensors = config_entry.options.get(CONF_ENABLE_EXTRA_SENSORS, True)
     if enable_extra_sensors:
-        entities.extend([
-            LegrandSmartherHeatingSensor(coordinator),
-            LegrandSmartherCoolingSensor(coordinator),
-        ])
-    
+        entities.extend(
+            [
+                LegrandSmartherHeatingSensor(coordinator),
+                LegrandSmartherCoolingSensor(coordinator),
+            ]
+        )
+
     if entities:
         async_add_entities(entities)
 
@@ -86,17 +89,17 @@ class LegrandSmartherBinarySensorBase(CoordinatorEntity, BinarySensorEntity):
             ATTR_PLANT_ID: self.coordinator.plant_id,
             ATTR_MODULE_ID: self.coordinator.module_id,
         }
-        
+
         if self.coordinator.data:
             status = self.coordinator.data.get("status", {})
             attributes["load_state"] = status.get("loadState")
             attributes["function"] = status.get("function")
             attributes["mode"] = status.get("mode")
-        
+
         # Add error information if available
         if self.coordinator.error_info:
             attributes.update(self.coordinator.error_info)
-        
+
         return attributes
 
 
@@ -106,7 +109,7 @@ class LegrandSmartherHeatingSensor(LegrandSmartherBinarySensorBase):
     def __init__(self, coordinator: SmartherDataUpdateCoordinator) -> None:
         """Initialize the heating sensor."""
         super().__init__(coordinator, "heating", "Heating")
-        
+
         self._attr_device_class = BinarySensorDeviceClass.HEAT
         self._attr_entity_category = "diagnostic"
 
@@ -115,15 +118,14 @@ class LegrandSmartherHeatingSensor(LegrandSmartherBinarySensorBase):
         """Return true if heating is active."""
         if not self.coordinator.data:
             return None
-        
+
         status = self.coordinator.data.get("status", {})
         load_state = status.get("loadState")
         function = status.get("function", THERMOSTAT_FUNCTION_HEATING)
-        
+
         # Heating is active if load state is active and function is heating
         return (
-            load_state == LOAD_STATE_ACTIVE
-            and function == THERMOSTAT_FUNCTION_HEATING
+            load_state == LOAD_STATE_ACTIVE and function == THERMOSTAT_FUNCTION_HEATING
         )
 
     @property
@@ -140,7 +142,7 @@ class LegrandSmartherCoolingSensor(LegrandSmartherBinarySensorBase):
     def __init__(self, coordinator: SmartherDataUpdateCoordinator) -> None:
         """Initialize the cooling sensor."""
         super().__init__(coordinator, "cooling", "Cooling")
-        
+
         self._attr_device_class = BinarySensorDeviceClass.COLD
         self._attr_entity_category = "diagnostic"
 
@@ -149,15 +151,14 @@ class LegrandSmartherCoolingSensor(LegrandSmartherBinarySensorBase):
         """Return true if cooling is active."""
         if not self.coordinator.data:
             return None
-        
+
         status = self.coordinator.data.get("status", {})
         load_state = status.get("loadState")
         function = status.get("function", THERMOSTAT_FUNCTION_HEATING)
-        
+
         # Cooling is active if load state is active and function is cooling
         return (
-            load_state == LOAD_STATE_ACTIVE
-            and function == THERMOSTAT_FUNCTION_COOLING
+            load_state == LOAD_STATE_ACTIVE and function == THERMOSTAT_FUNCTION_COOLING
         )
 
     @property

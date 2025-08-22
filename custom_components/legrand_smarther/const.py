@@ -38,12 +38,12 @@ TEMP_UNIT_CELSIUS = "C"
 # Error Codes and Messages
 ERROR_CODES = {
     400: "Bad request: something is probably wrong in your request body or headers.",
-    401: "Unauthorized: user is not authorized to access the requested resource.", 
+    401: "Unauthorized: user is not authorized to access the requested resource.",
     404: "Resource not found/Gateway offline: something is probably wrong in your request URL or your thermostat is temporarily disconnected from the network.",
     408: "Request timeout",
     469: "Official application password expired: password used in the Thermostat official app is expired. Please renew it through the official application.",
     470: "Official application terms and conditions expired: terms and conditions for Thermostat official app are expired. Please accept them again through the official application.",
-    500: "Server internal error"
+    500: "Server internal error",
 }
 
 # User-friendly error messages for UI
@@ -53,7 +53,7 @@ USER_ERROR_MESSAGES = {
     408: "Request timed out. Please try again.",
     469: "Your Thermostat app password has expired. Please renew it in the official Legrand Thermostat app.",
     470: "Terms and conditions have expired. Please accept them again in the official Legrand Thermostat app.",
-    500: "Server error. Please try again later."
+    500: "Server error. Please try again later.",
 }
 
 # Entity Categories

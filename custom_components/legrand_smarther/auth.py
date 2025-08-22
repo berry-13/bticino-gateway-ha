@@ -1,6 +1,7 @@
 """OAuth2 authentication for Legrand Smarther."""
+
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_entry_oauth2_flow
@@ -9,8 +10,8 @@ from homeassistant.helpers.config_entry_oauth2_flow import LocalOAuth2Implementa
 from .const import (
     DOMAIN,
     OAUTH2_AUTHORIZE_URL,
-    OAUTH2_TOKEN_URL,
     OAUTH2_SCOPES,
+    OAUTH2_TOKEN_URL,
 )
 
 _LOGGER = logging.getLogger(__name__)

@@ -1,4 +1,5 @@
 """Diagnostics support for Legrand Smarther."""
+
 import logging
 from typing import Any, Dict
 
@@ -16,10 +17,10 @@ async def async_get_config_entry_diagnostics(
     """Return diagnostics for a config entry."""
     data = hass.data[DOMAIN].get(config_entry.entry_id, {})
     coordinator = data.get("coordinator")
-    
+
     if not coordinator:
         return {"error": "No coordinator found for this entry"}
-    
+
     diagnostics = {
         "config_entry": {
             "title": config_entry.title,
@@ -45,15 +46,17 @@ async def async_get_config_entry_diagnostics(
         "data": _redact_sensitive_data(coordinator.data),
         "error_info": coordinator.error_info,
     }
-    
+
     # Add OAuth session info (without tokens)
     session = data.get("session")
     if session:
         diagnostics["oauth_session"] = {
-            "implementation_domain": getattr(session.implementation, "domain", "unknown"),
+            "implementation_domain": getattr(
+                session.implementation, "domain", "unknown"
+            ),
             "token_valid": await session.async_ensure_token_valid() is None,
         }
-    
+
     return diagnostics
 
 
@@ -66,7 +69,9 @@ def _redact_sensitive_data(data: Any) -> Any:
                 redacted[key] = "**REDACTED**"
             elif key in ("plant_id", "module_id") and isinstance(value, str):
                 # Partially redact IDs for privacy
-                redacted[key] = f"{value[:8]}...{value[-4:]}" if len(value) > 12 else "**REDACTED**"
+                redacted[key] = (
+                    f"{value[:8]}...{value[-4:]}" if len(value) > 12 else "**REDACTED**"
+                )
             else:
                 redacted[key] = _redact_sensitive_data(value)
         return redacted
